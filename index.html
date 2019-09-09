@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Color Picker</title>
+    <style>
+      * {
+        font-family: sans-serif;
+      }
+      #swatch {
+        width: 200px;
+        height: 200px;
+        background-color: #ff0000;
+      }
+      #selector {
+        display: flex;
+        align-items: center;
+      }
+      #color_data {
+        width: 20vw;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+      }
+      h3 {
+        margin-right: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <section id="selector">
+      <h3>Select color:</h3>
+      <input type="color" value="#ff0000" id="color_picker" />
+    </section>
+
+    <section id="swatch"></section>
+    <section id="color_data">
+      <h3>HEX:</h3>
+      <p id="hex">#ff0000</p>
+      <h3>RGB:</h3>
+      <p id="rgb">(255,0,0)</p>
+      <h3>HSL:</h3>
+      <p id="hsl">0, 100, 50</p>
+    </section>
+    <script src="script.js"></script>
+  </body>
+</html>
