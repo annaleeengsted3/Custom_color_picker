@@ -90,3 +90,6 @@ function showHSL(h, s, l) {
   console.log(H, S, L);
   document.querySelector("#hsl").textContent = `${H}, ${S}%, ${L}%`;
 }
+
+//overvej at samle alle show-functions i én- dvs calc alt, så show
+// const r = parseInt(color.substring(2,3));
