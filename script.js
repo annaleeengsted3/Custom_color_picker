@@ -89,8 +89,8 @@ function writeOtherRGBs() {
   }
   document.querySelector(
     "body"
-  ).style.background = `linear-gradient(to right, ${rgb2HEXarray[0]}, ${
-    rgb2HEXarray[1]
+  ).style.background = `linear-gradient(to right, ${rgb2HEXarray[1]}, ${
+    rgb2HEXarray[0]
   }, ${baseCol}, ${rgb2HEXarray[2]}, ${rgb2HEXarray[3]})`;
 }
 
