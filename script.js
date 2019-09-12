@@ -1,47 +1,158 @@
 "use strict";
-
+let harmony = "analogous";
+let rgb2HEXarray = [];
+let fullHex = [];
+let baseCol;
+let colorArray;
 const colorPicker = document.querySelector("#color_picker");
-//input: every time user changes color, change: when user closes picker
-colorPicker.addEventListener("input", updateSwatch, false);
-// colorPicker.addEventListener("change", watchColorPicker, false);
+
+document.querySelector("select").addEventListener("change", function() {
+  harmony = this.value;
+  updateSwatch();
+  console.log(harmony);
+});
+
+colorPicker.addEventListener("input", function() {
+  baseCol = event.target.value;
+  //convertBase2Hex(baseCol);
+  updateSwatch();
+});
+
+function convertBase2Hex(baseCol) {
+  const firstDigitsStart = baseCol.indexOf("(");
+  const firstDigitsEnd = baseCol.indexOf(",");
+  let r = baseCol.substring(firstDigitsStart + 1, firstDigitsEnd);
+  const secondDigitsStart = baseCol.indexOf(",");
+  const secondDigitsEnd = baseCol.lastIndexOf(",");
+  let g = baseCol.substring(secondDigitsStart + 1, secondDigitsEnd);
+  const lastDigitsStart = baseCol.lastIndexOf(",") + 2;
+  let b = baseCol.substring(lastDigitsStart, baseCol.length - 1);
+  let r2 = parseInt(r, 10).toString(16);
+  let g2 = parseInt(g, 10).toString(16);
+  let b2 = parseInt(b, 10).toString(16);
+
+  if (r.length == 1) {
+    r2 = "0" + r;
+  }
+  if (g.length == 1) {
+    g2 = "0" + g;
+  }
+  if (b.length == 1) {
+    b2 = "0" + b;
+  }
+
+  baseCol = `#${r2}${g2}${b2}`;
+  updateSwatch();
+}
 
 function updateSwatch() {
-  const color = event.target.value;
-  document.querySelector("#swatch").style.backgroundColor = color;
-  //   console.log(event.target.value);
+  showHex();
+  const rgbbase = convertToRGB(baseCol);
+  const rbase = rgbbase.r;
+  const gbase = rgbbase.g;
+  const bbase = rgbbase.b;
+  const hslbase = convertToHSL(rbase, gbase, bbase);
+  const hbase = hslbase.h;
+  const sbase = hslbase.s;
+  const lbase = hslbase.l;
 
-  showHex(color);
+  if (harmony == "analogous") {
+    colorArray = setAnalogousValues(hbase, sbase, lbase);
+  } else if (harmony == "monochromatic") {
+    colorArray = setMonoValues(hbase, sbase, lbase);
+  } else if (harmony == "triad") {
+    colorArray = setTriadValues(hbase, sbase, lbase);
+  } else if (harmony == "complementary") {
+    colorArray = setComplementValues(hbase, sbase, lbase);
+  } else if (harmony == "compund") {
+    colorArray = setCompoundValues(hbase, sbase, lbase);
+  } else if (harmony == "shades") {
+    colorArray = setShadesValues(hbase, sbase, lbase);
+  }
+  showColors(colorArray);
+  writeOtherRGBs();
+  convertRGB2HEX();
 }
 
-function showHex(color) {
-  document.querySelector("#hex").textContent = color;
-  createSubstringHex(color);
+function showHex() {
+  document.querySelector(".swatchbase").style.backgroundColor = baseCol;
+  document.querySelector("#hex").textContent = baseCol;
 }
 
-function createSubstringHex(color) {
-  //   console.log(`hex code is: ${color}`);
-  const hex1 = color.substring(1, 3);
-  const hex2 = color.substring(3, 5);
-  const hex3 = color.substring(5);
-  //   console.log(`first 2 digits R is: ${hex1}`);
-  //   console.log(`next 2 digits G is: ${hex2}`);
-  //   console.log(`last 2 digits B is: ${hex3}`);
-  //   console.log(parseInt(hex1, 16));
-  //   console.log(parseInt(hex2, 16));
-  //   console.log(parseInt(hex3, 16));
-  convertToRGB(hex1, hex2, hex3);
+function writeOtherRGBs() {
+  for (let i = 1; i < 5; i++) {
+    const swatchClass = `.swatch${i}`;
+    const nextRGBId = `#rgb${i}`;
+    const otherRGBs = document.querySelector(swatchClass).style.backgroundColor;
+    document.querySelector(nextRGBId).textContent = otherRGBs;
+    rgb2HEXarray.splice(i - 1, i - 1, otherRGBs);
+  }
+  document.querySelector(
+    "body"
+  ).style.background = `linear-gradient(to right, ${rgb2HEXarray[0]}, ${
+    rgb2HEXarray[1]
+  }, ${baseCol}, ${rgb2HEXarray[2]}, ${rgb2HEXarray[3]})`;
 }
 
-function convertToRGB(hex1, hex2, hex3) {
-  const r = parseInt(hex1, 16);
-  const g = parseInt(hex2, 16);
-  const b = parseInt(hex3, 16);
-  showRGB(r, g, b);
+function convertRGB2HEX() {
+  let i = 0;
+  rgb2HEXarray.forEach(color => {
+    const firstDigitsStart = color.indexOf("(");
+    const firstDigitsEnd = color.indexOf(",");
+    let r = color.substring(firstDigitsStart + 1, firstDigitsEnd);
+    const secondDigitsStart = color.indexOf(",");
+    const secondDigitsEnd = color.lastIndexOf(",");
+    let g = color.substring(secondDigitsStart + 1, secondDigitsEnd);
+    const lastDigitsStart = color.lastIndexOf(",") + 2;
+    let b = color.substring(lastDigitsStart, color.length - 1);
+    i++;
+    let hexId = `#hex${i}`;
+
+    let r2 = parseInt(r, 10).toString(16);
+    let g2 = parseInt(g, 10).toString(16);
+    let b2 = parseInt(b, 10).toString(16);
+
+    if (r.length == 1) {
+      r2 = "0" + r;
+    }
+    if (g.length == 1) {
+      g2 = "0" + g;
+    }
+    if (b.length == 1) {
+      b2 = "0" + b;
+    }
+
+    document.querySelector(hexId).textContent = `#${r2}${g2}${b2}`;
+  });
 }
 
-function showRGB(r, g, b) {
-  document.querySelector("#rgb").textContent = `(${r}, ${g} ${b})`;
-  convertToHSL(r, g, b);
+function showColors(colorArray) {
+  for (let i = 1; i < 5; i++) {
+    let nextSwatchClass = `.swatch${i}`;
+    let pos = i - 1;
+    let nextHSLId = `#hsl${i}`;
+    let nextHEXId = `#hex${i}`;
+    document.querySelector(nextSwatchClass).style.backgroundColor =
+      colorArray[pos];
+
+    document.querySelector(nextHSLId).textContent = colorArray[pos];
+  }
+}
+
+function writeHSL(h, s, l) {
+  document.querySelector("#hsl").textContent = `hsl(${h},${s}%,${l}%)`;
+}
+function writeRGB(r, g, b) {
+  document.querySelector("#rgb").textContent = `rgb(${r}, ${g}, ${b})`;
+}
+
+function convertToRGB(baseCol) {
+  const r = parseInt(baseCol.substring(1, 3), 16);
+  const g = parseInt(baseCol.substring(3, 5), 16);
+  const b = parseInt(baseCol.substring(5, 7), 16);
+  writeRGB(r, g, b);
+  console.log(`base color has RGB ${r}, ${g}, ${b}`);
+  return { r, g, b };
 }
 
 function convertToHSL(r, g, b) {
@@ -75,21 +186,78 @@ function convertToHSL(r, g, b) {
   } else {
     s = (max - l) / Math.min(l, 1 - l);
   }
-  //   console.log("before hsl(%f,%f%,%f%)", h, s, l);
+
   // multiply s and l by 100 to get the value in percent, rather than [0,1]
   s *= 100;
   l *= 100;
 
-  showHSL(h, s, l);
+  h = Math.round(h);
+  s = Math.round(s);
+  l = Math.round(l);
+
+  console.log(`base color has HSL ${h}, ${s}, ${l}`);
+
+  writeHSL(h, s, l);
+
+  return { h, s, l };
 }
 
-function showHSL(h, s, l) {
-  const H = Math.round(h);
-  const S = Math.round(s);
-  const L = Math.round(l);
-  console.log(H, S, L);
-  document.querySelector("#hsl").textContent = `${H}, ${S}%, ${L}%`;
+function setAnalogousValues(h, s, l) {
+  console.log("analgous logged");
+  const col1 = `hsl(${h + 20},${s}%,${l}%)`;
+  const col2 = `hsl(${h + 40},${s}%,${l}%)`;
+  const col3 = `hsl(${h - 20},${s}%,${l}%)`;
+  const col4 = `hsl(${h - 40},${s}%,${l}%)`;
+
+  return [col1, col2, col3, col4];
 }
 
-//overvej at samle alle show-functions i én- dvs calc alt, så show
-// const r = parseInt(color.substring(2,3));
+function setMonoValues(h, s, l) {
+  console.log("mono logged");
+  const col1 = `hsl(${h},${s}%,${l - 20}%)`;
+  const col2 = `hsl(${h},${s}%,${l - 40}%)`;
+  const col3 = `hsl(${h},${s}%,${l + 20}%)`;
+  const col4 = `hsl(${h},${s}%,${l + 40}%)`;
+
+  return [col1, col2, col3, col4];
+}
+
+function setTriadValues(h, s, l) {
+  console.log("triad logged");
+  const col1 = `hsl(${h + 120},${s}%,${l}%)`;
+  const col2 = `hsl(${h + 125},${s}%,${l}%)`;
+  const col3 = `hsl(${h - 120},${s}%,${l}%)`;
+  const col4 = `hsl(${h - 125},${s}%,${l}%)`;
+
+  return [col1, col2, col3, col4];
+}
+
+function setComplementValues(h, s, l) {
+  console.log("complement logged");
+  const col1 = `hsl(${h + 180},${s}%,${l}%)`;
+  const col2 = `hsl(${h + 190},${s}%,${l}%)`;
+  const col3 = `hsl(${h - 170},${s}%,${l}%)`;
+  const col4 = `hsl(${h - 10},${s}%,${l}%)`;
+
+  return [col1, col2, col3, col4];
+}
+
+function setCompoundValues(h, s, l) {
+  console.log("compound logged");
+  const col1 = `hsl(${h},${s}%,${l - 20}%)`;
+  const col2 = `hsl(${h + 20},${s}%,${l}%)`;
+  const col3 = `hsl(${h - 180},${s}%,${l}%)`;
+  const col4 = `hsl(${h - 160},${s}%,${l}%)`;
+
+  return [col1, col2, col3, col4];
+}
+
+function setShadesValues(h, s, l) {
+  console.log("shades logged");
+  const col1 = `hsl(${h},${s + 20}%,${l}%)`;
+  const col2 = `hsl(${h},${s + 40}%,${l}%)`;
+  const col3 = `hsl(${h},${s - 20}%,${l}%)`;
+  const col4 = `hsl(${h},${s - 40}%,${l}%)`;
+
+  return [col1, col2, col3, col4];
+}

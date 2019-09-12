@@ -4,44 +4,153 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Playfair+Display:400,700,900&display=swap"
+      rel="stylesheet"
+    />
     <title>Color Picker</title>
     <style>
       * {
         font-family: sans-serif;
       }
-      #swatch {
-        width: 200px;
-        height: 200px;
-        background-color: #ff0000;
+      body {
+        margin: 0;
+      }
+
+      .selection {
+        display: grid;
+        grid-template-columns: 1fr;
+        text-align: center;
+        justify-items: center;
+        background-color: rgba(255, 255, 255, 0.582);
+        margin-top: 20vh;
+      }
+      .all_swatches {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+      }
+      .swatch {
+        width: 100%;
+        height: 700px;
+        border-left: 2px solid rgba(255, 255, 255, 0.582);
+        border-right: 2px solid rgba(255, 255, 255, 0.582);
+      }
+      .swatch1,
+      .swatch2,
+      .swatch3,
+      .swatch4 {
+        background-color: #ffffff;
+      }
+
+      .swatchbase {
+        background-color: #8a77f1;
       }
       #selector {
+        justify-self: center;
         display: flex;
         align-items: center;
       }
-      #color_data {
+      select,
+      option {
+        background-color: #ffffff;
+        font-size: 1rem;
+      }
+      label {
+        font-family: "Playfair Display", serif;
+        font-size: 1.1rem;
+        font-weight: 700;
+        justify-self: center;
+        align-self: center;
+      }
+      input {
+        width: 50px;
+        border-radius: 25px;
+      }
+      .color_data {
         width: 20vw;
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: 1fr;
+        justify-items: center;
+        font-weight: 400;
+        background-color: rgba(255, 255, 255, 0.582);
+        padding-top: 3vh;
       }
       h3 {
         margin-right: 10px;
+        font-family: "Playfair Display", serif;
+        font-size: 1.4rem;
+        font-weight: 900;
       }
     </style>
   </head>
   <body>
-    <section id="selector">
-      <h3>Select color:</h3>
-      <input type="color" value="#ff0000" id="color_picker" />
+    <section class="selection">
+      <section id="selector">
+        <h3>Select color:</h3>
+        <input type="color" value="#8a77f1" id="color_picker" />
+      </section>
+
+      <label id="harmony">
+        Choose color harmony:
+        <select name="themes" id="themes">
+          <option value="analogous">Analogous</option>
+          <option value="monochromatic">Monochromatic</option>
+          <option value="triad">Triad</option>
+          <option value="complementary">Complementary</option>
+          <option value="compund">Compound</option>
+          <option value="shades">Shades</option>
+        </select>
+      </label>
     </section>
 
-    <section id="swatch"></section>
-    <section id="color_data">
-      <h3>HEX:</h3>
-      <p id="hex">#ff0000</p>
-      <h3>RGB:</h3>
-      <p id="rgb">(255,0,0)</p>
-      <h3>HSL:</h3>
-      <p id="hsl">0, 100, 50</p>
+    <section class="all_swatches">
+      <section class="col2">
+        <section class="color_data">
+          <p id="hex2"></p>
+          <p id="rgb2"></p>
+          <p id="hsl2"></p>
+        </section>
+
+        <section class="swatch swatch2"></section>
+      </section>
+
+      <section class="col1">
+        <section class="color_data">
+          <p id="hex1"></p>
+          <p id="rgb1"></p>
+          <p id="hsl1"></p>
+        </section>
+        <section class="swatch swatch1"></section>
+      </section>
+
+      <section class="colbase">
+        <section class="color_data">
+          <p id="hex">#8a77f1</p>
+
+          <p id="rgb">rgb(138, 119, 241)</p>
+
+          <p id="hsl">hsl(249,81%,71%)</p>
+        </section>
+        <section class="swatch swatchbase"></section>
+      </section>
+
+      <section class="col4">
+        <section class="color_data">
+          <p id="hex3"></p>
+          <p id="rgb3"></p>
+          <p id="hsl3"></p>
+        </section>
+        <section class="swatch swatch3"></section>
+      </section>
+
+      <section class="col5">
+        <section class="color_data">
+          <p id="hex4"></p>
+          <p id="rgb4"></p>
+          <p id="hsl4"></p>
+        </section>
+        <section class="swatch swatch4"></section>
+      </section>
     </section>
     <script src="script.js"></script>
   </body>
