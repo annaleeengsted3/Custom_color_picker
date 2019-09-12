@@ -1,7 +1,6 @@
 "use strict";
 let harmony = "analogous";
 let rgb2HEXarray = [];
-let fullHex = [];
 let baseCol;
 let colorArray;
 const colorPicker = document.querySelector("#color_picker");
@@ -14,36 +13,8 @@ document.querySelector("select").addEventListener("change", function() {
 
 colorPicker.addEventListener("input", function() {
   baseCol = event.target.value;
-  //convertBase2Hex(baseCol);
   updateSwatch();
 });
-
-function convertBase2Hex(baseCol) {
-  const firstDigitsStart = baseCol.indexOf("(");
-  const firstDigitsEnd = baseCol.indexOf(",");
-  let r = baseCol.substring(firstDigitsStart + 1, firstDigitsEnd);
-  const secondDigitsStart = baseCol.indexOf(",");
-  const secondDigitsEnd = baseCol.lastIndexOf(",");
-  let g = baseCol.substring(secondDigitsStart + 1, secondDigitsEnd);
-  const lastDigitsStart = baseCol.lastIndexOf(",") + 2;
-  let b = baseCol.substring(lastDigitsStart, baseCol.length - 1);
-  let r2 = parseInt(r, 10).toString(16);
-  let g2 = parseInt(g, 10).toString(16);
-  let b2 = parseInt(b, 10).toString(16);
-
-  if (r.length == 1) {
-    r2 = "0" + r;
-  }
-  if (g.length == 1) {
-    g2 = "0" + g;
-  }
-  if (b.length == 1) {
-    b2 = "0" + b;
-  }
-
-  baseCol = `#${r2}${g2}${b2}`;
-  updateSwatch();
-}
 
 function updateSwatch() {
   showHex();
@@ -186,7 +157,6 @@ function convertToHSL(r, g, b) {
   } else {
     s = (max - l) / Math.min(l, 1 - l);
   }
-
   // multiply s and l by 100 to get the value in percent, rather than [0,1]
   s *= 100;
   l *= 100;
