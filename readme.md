@@ -1,3 +1,3 @@
 See working prototype here:
 
-https://annaleeengsted3.github.io/color_picker/
+http://ohnonotanotherwebsite.com/portfolio/color_picker/index.html
